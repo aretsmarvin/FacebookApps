@@ -1,0 +1,122 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Open+Sans:400,700">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+		<style>
+			body {
+				font-family: "Open Sans", sans-serif;
+			}
+			h2 {
+				color: #333;
+				text-align: center;
+				text-transform: uppercase;
+				font-family: "Roboto", sans-serif;
+				font-weight: bold;
+				position: relative;
+				margin: 25px 0 50px;
+			}
+			h2::after {
+				content: "";
+				width: 100px;
+				position: absolute;
+				margin: 0 auto;
+				height: 3px;
+				background: #ffdc12;
+				left: 0;
+				right: 0;
+				bottom: -10px;
+			}
+			.carousel .carousel-item {
+				color: #999;
+				font-size: 14px;
+				text-align: center;
+				overflow: hidden;
+				min-height: 340px;
+			}
+			.carousel .carousel-item a {
+				color: #eb7245;
+			}
+			.carousel .testimonial {	
+				padding: -30px 0 10px;
+			}
+			.carousel .overview {	
+				text-align: center;
+				padding-bottom: 5px;
+			}
+			.carousel .overview b {
+				color: #333;
+				font-size: 15px;
+				text-transform: uppercase;
+				display: block;	
+				padding-bottom: 5px;
+			}
+			.carousel .star-rating i {
+				font-size: 18px;
+				color: #ffdc12;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<center><b>Reviews</b></center>
+			<div id="ReviewSlider" class="carousel slide" data-ride="carousel"> 
+				<div class="carousel-inner">		
+					
+				</div>
+			</div>
+		</div>
+		<script>
+			function init() {
+				FB.api(
+					'/PAGEID/ratings?date_format=j-m-Y',
+					'GET',
+					{ 
+						access_token: "YOUR_PAGE_ACCESS_TOKEN", 
+			  	limit: 500 //500 is max
+			  },
+			  function(response) {
+			  	$(document).ready(function () {
+			  		var itemClass;
+
+			  		$.each(response.data, function (index, element) {
+			  			if(element.recommendation_type == "positive")
+			  			{
+			  				var totalItems = $(".carousel-item").length;
+			  				if(totalItems === 0) {
+			  					itemClass = "carousel-item active";
+			  				}
+			  				else {
+			  					itemClass = "carousel-item";
+			  				}
+			  				$('.carousel-inner').append('<div class="'+itemClass+'">' +
+			  					'<div class="star-rating"><p class="testimonial"><ul class="list-inline"><li class="list-inline-item"><i class="fa fa-star"></i></li><li class="list-inline-item"><i class="fa fa-star"></i></li><li class="list-inline-item"><i class="fa fa-star"></i></li><li class="list-inline-item"><i class="fa fa-star"></i></li><li class="list-inline-item"><i class="fa fa-star"></i></li></ul></div>' +
+			  					'</p>' +
+			  					element.review_text + ' <br><b>' + element.created_time + '</b></p>' +
+			  					'</div>');
+			  			}
+			  		});
+			  	})
+			  }
+			  );
+			}
+
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId      : 'YOUR_APP_ID',
+					xfbml      : true,
+					version    : 'v13.0'
+				});
+
+				init();
+			};
+		</script>
+		<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+	</body>
+	</html>
